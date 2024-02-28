@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  uzdevumadb:
+    container_name: Uzdevuma_datubaze 
+    image: mysql:8.3.0-oracle 
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    ports:
+      - 8003:3306 
+    networks:
+      - backend
+
+  darbauzdevumaprojekts:
+    container_name: Uzdevuma_Projekts
+    image: ${DOCKER_REGISTRY-}darbauzdevumaprojekts
+    build:
+      context: DarbaUzdevumaProjekts
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    ports:
+      - 8004:80
+    environment:
+      - DB_HOST=uzdevumadb
+      - DB_NAME=NewsDatabase
+      - DB_ROOT_PASSWORD=password
+
+networks:
+      backend:
+   

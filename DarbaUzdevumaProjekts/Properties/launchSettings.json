@@ -25,6 +25,7 @@
       "environmentVariables": {
         "ASPNETCORE_URLS": "https://+:443;http://+:80"
       },
+     
       "publishAllPorts": true,
       "useSSL": true
     }
@@ -37,5 +38,8 @@
       "applicationUrl": "http://localhost:9636",
       "sslPort": 44311
     }
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost; Database=NewsDatabase; User=root;Password=password;"
   }
 }
