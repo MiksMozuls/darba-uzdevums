@@ -1,5 +1,7 @@
 using DarbaUzdevumaProjekts.Persistance;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Writers;
+using Microsoft.AspNetCore.Hosting; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +21,27 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)); 
 });
 
-var app = builder.Build();
 
+
+
+//var webHost = new WebHostBuilder()
+//    .UseStartup
+//    .UseContentRoot(Directory.GetCurrentDirectory())
+//    .Build();
+
+
+
+
+
+
+var app = builder.Build();
+var scope = app.Services.CreateScope(); 
+
+using (DataContext context = scope.ServiceProvider.GetRequiredService<DataContext>())
+{
+    context.Database.Migrate();
+    await Seed.SeedData(context); 
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

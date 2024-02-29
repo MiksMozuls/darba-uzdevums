@@ -1,4 +1,5 @@
 ﻿using DarbaUzdevumaProjekts.Domain;
+using HtmlAgilityPack;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
@@ -13,7 +14,7 @@ namespace DarbaUzdevumaProjekts.Controllers
     {
         [HttpGet("")]
         public async Task<ActionResult<Test>> TestAction() {
-            
+
             return new Test (); 
             
         }
