@@ -1,12 +1,20 @@
 ﻿using DarbaUzdevumaProjekts.Domain;
 using DarbaUzdevumaProjekts.Persistance;
 using HtmlAgilityPack;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace DarbaUzdevumaProjekts.Application
 {
     public class Scraper
     {
-        public async static Task<List<NewsPiece>> TvnetScraper(DataContext _context)
+
+        public async static Task<Unit> Scrape(DataContext _context){
+            var LSMArticles = await Scraper.LsmScraper(_context);
+            var TvnetArticles = await Scraper.TvnetScraper(_context);
+            return Unit.Value; 
+        }
+        public async static Task<Unit> TvnetScraper(DataContext _context)
         {
             var url = "https://www.tvnet.lv/";
 
@@ -14,8 +22,6 @@ namespace DarbaUzdevumaProjekts.Application
             var doc = web.Load(url);
 
             var articles = doc.DocumentNode.SelectNodes("//article/a");
-
-            List<NewsPiece> pieces = new List<NewsPiece>();
 
             foreach (var article in articles)
             {
@@ -56,8 +62,8 @@ namespace DarbaUzdevumaProjekts.Application
                         fulltext += node.InnerText;
 
                     }
-                    
-                    pieces.Add(new NewsPiece
+
+                    _context.Add(new NewsPiece
                     {
                         NewsID = new Guid(),
                         Title = HtmlAgilityPack.HtmlEntity.DeEntitize(title),
@@ -65,16 +71,18 @@ namespace DarbaUzdevumaProjekts.Application
                         Link = articleUrl,
                         NewsSourceID = SourceId,
                         NewsSource = Source
-                    }); ;
+                    }); 
+
+                    await _context.SaveChangesAsync();
                 }
 
 
 
 
             }
-            return pieces;
+            return Unit.Value;
         }
-        public async static Task<List<NewsPiece>> LsmScraper(DataContext _context)
+        public async static Task<Unit> LsmScraper(DataContext _context)
         {
             var url = "https://www.lsm.lv";
 
@@ -83,7 +91,6 @@ namespace DarbaUzdevumaProjekts.Application
 
             var articles = doc.DocumentNode.SelectNodes("//figcaption/a");
 
-            List<NewsPiece> pieces = new List<NewsPiece>();
             foreach (var article in articles)
             {
                 var articleUrl = url + article.Attributes["href"].Value;
@@ -101,18 +108,20 @@ namespace DarbaUzdevumaProjekts.Application
 
                 var titleNode = articledoc.DocumentNode.SelectNodes("//h2[@class='article-lead']").First();
                 var textNode = articledoc.DocumentNode.SelectNodes("//div[@class='article__body']").First();
-                pieces.Add(new NewsPiece
+                _context.NewsPiece.Add(new NewsPiece
                 {
                     NewsID = new Guid(),
                     Title = HtmlAgilityPack.HtmlEntity.DeEntitize(titleNode.InnerText),
                     Text = HtmlAgilityPack.HtmlEntity.DeEntitize(textNode.InnerText),
                     Link = articleUrl,
                     NewsSource = Source
-                }); 
+                });
+                
+                await _context.SaveChangesAsync();
 
 
             }
-            return pieces;
+            return Unit.Value;
 
 
         }

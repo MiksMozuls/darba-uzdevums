@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
-import logo from './logo.svg';
 import NewsPiece from '../../models/NewsPiece';
-import NewsSource from '../../models/NewsSource';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { AppBar, Grid, Link, Paper, Toolbar, styled } from '@mui/material'; 
+import {Grid, Paper, styled } from '@mui/material'; 
 import NavBar from './navbar';
 
 
 const ArticlePaper = styled(Paper)(({ theme }) => ({
-    width: 120,
-    height: 120,
-    padding: theme.spacing(2),
+    
+    
+    padding: theme.spacing(1),
     margin: 20,
+    textOverflow:"elipsis", 
     ...theme.typography.body2,
     textAlign: 'center',
+    display: "flex", 
+    flexDirection:"column",
+    justifyContent: "center",
+    height:"85%",
+    backgroundColor:"#faf6f5"
   }));
   
   
@@ -25,36 +27,33 @@ const ArticlePaper = styled(Paper)(({ theme }) => ({
 export default function MainPage() {
     const [news, setNews] = useState<NewsPiece[]>([]); 
     useEffect(() => {
-      axios.get<NewsPiece[]>('http://localhost:8004/api/News/GetNews').then(response => {
-        console.log(response)
-        setNews(response.data)
-      })
-  });
+        axios.get<NewsPiece[]>('http://localhost:8004/api/News/GetNews').then(response => {
+            console.log(response)
+            setNews(response.data)
+        })
+    }, []);
+ 
+
   return (
     <div>
     <NavBar/>
 
-    <Box sx={{ flexGrow: 1 }}>
-    <Grid direction={'row'} container >
+    <Box>
+    <Grid direction={"row"} container columns={{ xs: 12, md: 8, lg:8, xl:8}} rowGap={4}>
       
       {news.map(x => (
-        <div>
+      
           
-          <Grid item xs = {12} spacing={2}>
-                    
-            
+          <Grid item xs={2} key={x.newsID} style = {{textOverflow: 'elipsis'}}>
             <ArticlePaper>
-              <Typography align= {"center"} sx={{ fontSize: 14 }} color="text.secondary">
-                {x.title.substring(0,50) + "..."}
+              <Typography  component="a" href={`/detailed/${x.newsID}`} align= {"center"} sx={{ fontSize: 14 }} color="text.secondary" >
+                {x.title + "..."}
               </Typography>
             </ArticlePaper>
-      
-    
-       
           </Grid>
            
 
-        </div>
+   
         
 
       ))}
