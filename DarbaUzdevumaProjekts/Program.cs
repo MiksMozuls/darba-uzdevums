@@ -14,6 +14,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+builder.Services.AddCors(options => {
+    options.AddPolicy("MyAllowSpecificOrigins", builder => {
+        builder.AllowAnyMethod()
+        .SetIsOriginAllowed(origin => true)
+        .AllowAnyHeader()
+        .AllowAnyOrigin();
+      
+    
+    
+    });
+
+
+});
+
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
 var dbName = Environment.GetEnvironmentVariable("DB_NAME");
 var dbPassword = Environment.GetEnvironmentVariable("DB_ROOT_PASSWORD");
@@ -54,7 +68,9 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+
+app.UseCors("MyAllowSpecificOrigins");
 
 app.UseAuthorization();
 

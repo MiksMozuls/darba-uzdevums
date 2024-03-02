@@ -23,21 +23,20 @@ namespace DarbaUzdevumaProjekts.Controllers
         {
 
             var LSMArticles = await Scraper.LsmScraper(_context);
-            var TvnetArticles = await Scraper.TvnetScraper(_context);
 
             foreach (var item in LSMArticles)
             {
                 _context.Add(item);
                 await _context.SaveChangesAsync();
             }
-
+            var TvnetArticles = await Scraper.TvnetScraper(_context);
             foreach (var item in TvnetArticles)
             {
                 _context.Add(item);
                 await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+       
 
             return Ok(); 
         }
@@ -60,9 +59,9 @@ namespace DarbaUzdevumaProjekts.Controllers
         {
             return Ok(_context.NewsPiece.Where(n => n.NewsSourceID == sourceId));
         }
-        [HttpGet("GetNewsPiece")]
+        [HttpGet("GetNewsPiece/{newsID}")]
         // Atgriež specifisku ziņu 
-        public async Task<ActionResult<NewsPiece>> GetNewsPiece(Guid NewsID)
+        public async Task<ActionResult<NewsPiece>> GetNewsPiece(Guid newsID)
         {
             return Ok(_context.NewsPiece.Where(n => n.NewsID == NewsID));
         }

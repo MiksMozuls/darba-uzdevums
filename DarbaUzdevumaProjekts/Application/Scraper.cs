@@ -45,26 +45,26 @@ namespace DarbaUzdevumaProjekts.Application
 
                     }
 
-
+                    
                     var textNodes = articledoc.DocumentNode.SelectNodes("//p");
                     string fulltext = "";
+                    var SourceId = _context.NewsSource.Where(m => m.SourceName == "TVNET").First().SourceID;
+                    var Source = _context.NewsSource.Where(m => m.SourceName == "TVNET").First();
 
                     foreach (var node in textNodes)
                     {
                         fulltext += node.InnerText;
 
                     }
-
-
-
+                    
                     pieces.Add(new NewsPiece
                     {
                         NewsID = new Guid(),
-                        Title = title,
-                        Text = fulltext,
+                        Title = HtmlAgilityPack.HtmlEntity.DeEntitize(title),
+                        Text = HtmlAgilityPack.HtmlEntity.DeEntitize(fulltext),
                         Link = articleUrl,
-                        NewsSourceID = _context.NewsSource.Where(m => m.SourceName == "TVNET").First().SourceID,
-                        NewsSource = _context.NewsSource.Where(m => m.SourceName == "TVNET").First()
+                        NewsSourceID = SourceId,
+                        NewsSource = Source
                     }); ;
                 }
 
@@ -88,6 +88,7 @@ namespace DarbaUzdevumaProjekts.Application
             {
                 var articleUrl = url + article.Attributes["href"].Value;
 
+                var Source = _context.NewsSource.Where(m => m.SourceName == "LSM").First();
                 if (articleUrl.Contains("replay.lsm") || _context.NewsPiece.Where(n => n.Link == articleUrl).Any())
                 {
                     continue;
@@ -103,10 +104,10 @@ namespace DarbaUzdevumaProjekts.Application
                 pieces.Add(new NewsPiece
                 {
                     NewsID = new Guid(),
-                    Title = titleNode.InnerText,
-                    Text = textNode.InnerText,
+                    Title = HtmlAgilityPack.HtmlEntity.DeEntitize(titleNode.InnerText),
+                    Text = HtmlAgilityPack.HtmlEntity.DeEntitize(textNode.InnerText),
                     Link = articleUrl,
-                    NewsSource = _context.NewsSource.Where(m => m.SourceName == "TVNET").First()
+                    NewsSource = Source
                 }); 
 
 
