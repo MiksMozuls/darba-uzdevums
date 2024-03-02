@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddCors(options => {
     options.AddPolicy("MyAllowSpecificOrigins", builder => {
@@ -35,7 +34,15 @@ var connectionString = $"server={dbHost};port=3306;database={dbName};user=root;p
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)); 
+    while (true) {
+        try {
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            break; 
+        }
+        catch (Exception ex) { Console.WriteLine("Waiting for database..."); }
+        
+    }
+    
 });
 
 
@@ -61,19 +68,23 @@ using (DataContext context = scope.ServiceProvider.GetRequiredService<DataContex
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
 
 
 //app.UseHttpsRedirection();
 
 app.UseCors("MyAllowSpecificOrigins");
 
-app.UseAuthorization();
+app.UseAuthorization(); 
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.MapControllers();
+app.MapFallbackToController("Index", "Fallback"); 
 
 app.Run();

@@ -35,6 +35,7 @@ export default function MainPage() {
         
 
         // Prod
+        axios.get('/api/News/scrape'); 
         axios.get<NewsPiece[]>('/api/News/GetNews').then(response => {
             console.log(response)
             setNews(response.data)
