@@ -14,7 +14,14 @@ export default function DetailedView() {
 
 
     useEffect(() => {
-    axios.get<NewsPiece>('http://localhost:8004/api/News/GetNewsPiece/' +id).then(response => {
+    //     Dev
+    //     axios.get<NewsPiece>('http://localhost:8004/api/News/GetNewsPiece/' +id).then(response => {
+    //     setTheseNews(response.data)
+    //     })
+    // }, []);
+ 
+    // Prod
+        axios.get<NewsPiece>('/api/News/GetNewsPiece/' +id).then(response => {
         setTheseNews(response.data)
         })
     }, []);
@@ -24,7 +31,7 @@ export default function DetailedView() {
         <div>
             <NavBar/> 
             
-            <Typography align= {"center"} sx={{ fontSize: 30 , fontWeight:'bold'}} color="text.secondary">
+            <Typography component="a" href={theseNews?.link} align= {"center"} sx={{ fontSize: 30 , fontWeight:'bold'}} color="text.secondary">
                 {theseNews?.title}
             </Typography>
             

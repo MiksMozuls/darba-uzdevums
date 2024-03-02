@@ -10,7 +10,14 @@ import { Toolbar, Typography } from '@mui/material';
 export default function NavBar(){
     const [newsources, setNewsSource] = useState<NewsSource[]>([]); 
     useEffect(() => {
-        axios.get<NewsSource[]>('http://localhost:8004/api/News/Sources').then(response => {
+        
+        // Dev
+        // axios.get<NewsSource[]>('http://localhost:8004/api/News/Sources').then(response => {
+        //     console.log(response)
+        //     setNewsSource(response.data)
+        // }); 
+        // Prod
+        axios.get<NewsSource[]>('/api/News/Sources').then(response => {
             console.log(response)
             setNewsSource(response.data)
         }); 

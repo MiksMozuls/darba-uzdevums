@@ -27,7 +27,15 @@ const ArticlePaper = styled(Paper)(({ theme }) => ({
 export default function MainPage() {
     const [news, setNews] = useState<NewsPiece[]>([]); 
     useEffect(() => {
-        axios.get<NewsPiece[]>('http://localhost:8004/api/News/GetNews').then(response => {
+        // Dev
+        // axios.get<NewsPiece[]>('http://localhost:8004/api/News/GetNews').then(response => {
+        //     console.log(response)
+        //     setNews(response.data)
+        // })
+        
+
+        // Prod
+        axios.get<NewsPiece[]>('/api/News/GetNews').then(response => {
             console.log(response)
             setNews(response.data)
         })
