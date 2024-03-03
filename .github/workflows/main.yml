@@ -1,0 +1,6 @@
+name: Docker Compose Action
+on: push
+
+jobs:
+  steps:
+    uses: isbang/compose-action@v1.5.1
