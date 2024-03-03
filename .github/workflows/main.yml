@@ -4,3 +4,4 @@ on: push
 jobs:
   steps:
     uses: isbang/compose-action@v1.5.1
+    compose-file: "../../docker-compose.yml"
