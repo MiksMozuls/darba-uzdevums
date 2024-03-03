@@ -2,6 +2,9 @@ name: Docker Compose Action
 on: push
 
 jobs:
-  steps:
-    uses: isbang/compose-action@v1.5.1
-    compose-file: "../../docker-compose.yml"
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: isbang/compose-action@v1.5.1
+        with:
+          compose-file: "../../docker-compose.yml"
